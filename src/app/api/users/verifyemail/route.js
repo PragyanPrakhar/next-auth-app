@@ -7,7 +7,7 @@ export async function POST(request) {
     try {
         const { token } = await request.json();
         console.log("Token is :-> ", token);
-        const user = await User.findOneAndUpdate({
+        const user = await User.findOne({
             verifyToken: token,
             verifyTokenExpiry: { $gt: Date.now() },
         });
@@ -33,6 +33,7 @@ export async function POST(request) {
     } catch (error) {
         return NextResponse.json(
             {
+                error: error.message,
                 status: 500,
             },
             { error: error.message }
