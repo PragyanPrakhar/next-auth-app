@@ -21,10 +21,12 @@ export async function POST(request) {
             email,
             password: hashedPassword,
         });
+        console.log("New User is ", newUser);
         const savedUser = await newUser.save();
         console.log(savedUser);
         //send verification email
-        await sendEmail(email, "VERIFY", savedUser._id);
+        console.log("saved User id is ", savedUser._id.toString());
+        await sendEmail({email,  emailType: "VERIFY", userId: savedUser._id });
 
         return NextResponse.json({
             message: "User registered successfully",

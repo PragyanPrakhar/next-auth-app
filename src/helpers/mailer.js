@@ -1,7 +1,11 @@
 import User from "@/models/user.model";
 import nodemailer from "nodemailer";
+import bcryptjs from "bcryptjs";
 export const sendEmail = async ({ email, emailType, userId }) => {
     try {
+        console.log("Email is", email);
+        console.log("Email Type is", emailType);
+        console.log("User Id is", userId);
         const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
         if (emailType === "VERIFY") {
@@ -17,7 +21,7 @@ export const sendEmail = async ({ email, emailType, userId }) => {
         }
 
         // Looking to send emails in production? Check out our Email API/SMTP product!
-        var transport = nodemailer.createTransport({
+        const transport = nodemailer.createTransport({
             host: "sandbox.smtp.mailtrap.io",
             port: 2525,
             auth: {
@@ -44,9 +48,7 @@ export const sendEmail = async ({ email, emailType, userId }) => {
                     : "reset your password"
             }
             or copy and paste the link below in your browser.<br>
-            ${
-                process.env.DOMAIN
-            }/verifyemail?token=${hashedToken}
+            ${process.env.DOMAIN}/verifyemail?token=${hashedToken}
             </p>
             `, // html body
         };
