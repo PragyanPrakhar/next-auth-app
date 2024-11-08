@@ -5,17 +5,22 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignupPage() {
     const [user, setUser] = useState({
         email: "",
         password: "",
+        username: "",
     });
     const [buttonDisabled, setButtonDisabled] = useState(true); // initially true
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        if (user.email.length > 0 && user.password.length > 0) {
+        if (
+            user.email.length > 0 &&
+            user.password.length > 0 &&
+            user.username.length > 0
+        ) {
             setButtonDisabled(false);
         } else {
             setButtonDisabled(true);
@@ -28,12 +33,12 @@ export default function LoginPage() {
         }
     }, [loading]);
 
-    const onLogin = async () => {
+    const onSignUp = async () => {
         try {
             setLoading(true);
-            const response = await axios.post("/api/users/login", user);
-            console.log("Login Success", response.data);
-            router.push("/profile");
+            const response = await axios.post("/api/users/signup", user);
+            console.log("SignUp Response", response.data);
+            router.push("/login");
         } catch (error) {
             console.log("Sign Up Failed");
             toast.error(error.message);
@@ -44,9 +49,9 @@ export default function LoginPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1 className="text-3xl">{loading ? "Processing.." : "Login"}</h1>
+            <h1 className="text-3xl">{loading ? "Processing.." : "SignUp"}</h1>
             <hr />
-            {/* <label htmlFor="username">Username</label>
+            <label htmlFor="username">Username</label>
             <input
                 id="username"
                 className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
@@ -54,7 +59,7 @@ export default function LoginPage() {
                 onChange={(e) => setUser({ ...user, username: e.target.value })}
                 type="text"
                 placeholder="Username"
-            /> */}
+            />
             <label htmlFor="email">Email</label>
             <input
                 id="email"
@@ -74,7 +79,7 @@ export default function LoginPage() {
                 placeholder="Password"
             />
             <button
-                onClick={onLogin}
+                onClick={onSignUp}
                 disabled={buttonDisabled}
                 className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
             >
@@ -82,11 +87,12 @@ export default function LoginPage() {
                     ? "Processing..."
                     : buttonDisabled
                     ? "Please fill the form"
-                    : "Login"}
+                    : "Sign Up"}
             </button>
-            <Link href="/signup">Visit SignUp Page</Link>
+            <Link href="/login">Visit Login Page</Link>
         </div>
     );
 }
+
 
 //24 minutes
